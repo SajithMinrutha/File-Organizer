@@ -3,33 +3,34 @@ from pathlib import Path
 from .categories import FILE_CATEGORIES
 
 
-# handle empty extensions
 class Organizer:
     def __init__(self, path):
-        self.P = Path(path)
+        self.path = Path(path)
         self.files_list = []
         self.subdirs_list = []
         self.extensions_list = []
         self.create_folders_list = []
+        self.remove_duplicate_list = []
+        self.categorized_dict = {}
 
     def scan_for_subdirs(self):
-        print(f"\nscanning {self.P} for subdirectories...\n")
-        self.subdirs_list = [entry for entry in self.P.iterdir() if entry.is_dir()]
+        print(f"\nscanning {self.path} for subdirectories...\n")
+        self.subdirs_list = [entry for entry in self.path.iterdir() if entry.is_dir()]
         for subdir in self.subdirs_list:
             print(subdir.name)
         return self.subdirs_list
 
     def scan_for_files(self):
-        print(f"\nscanning {self.P} for files...\n")
-        self.files_list = [entry for entry in self.P.iterdir() if entry.is_file()]
-        for files in self.files_list:
+        print(f"\nscanning {self.path} for files...\n")
+        self.files_list = [entry for entry in self.path.iterdir() if entry.is_file()]
+        for files in self.files_list:  # remove later
             print(files.name)
         return self.files_list
 
     def identify_file_extensions(self):
-        print(f"\nidentifying file extensions in {self.P}")
+        print(f"\nidentifying file extensions in {self.path}")
         for file in self.files_list:
-            self.extensions_list.append(file.suffix)
+            self.extensions_list.append(file.suffix.lower())
         return self.extensions_list
 
     def total_files_counter(self):
@@ -41,24 +42,64 @@ class Organizer:
         return set(self.extensions_list)
 
     def list_files_by_type(self):
-        remove_duplicates = self.remove_duplicates()
+        self.remove_duplicate_list = self.remove_duplicates()
         files_by_type = {}
-        for ext in remove_duplicates:
+        for ext in self.remove_duplicate_list:
             files_by_type[ext] = [
-                file for file in self.files_list if file.suffix == ext
+                file for file in self.files_list if file.suffix.lower() == ext
             ]
         return files_by_type
 
     def check_file_types(self):
-        for key, extensions_set in FILE_CATEGORIES.items():
-            print(key, extensions_set)
-            for ext in self.extensions_list:
+        self.categorized_dict = {}
+
+        for file in self.files_list:
+            ext = file.suffix.lower()
+            category = "Others"
+
+            for folder_name, extensions_set in FILE_CATEGORIES.items():
                 if ext in extensions_set:
-                    self.create_folders_list.append(key)
-        return self.create_folders_list
+                    category = folder_name
+                    break
+
+            self.categorized_dict.setdefault(category, []).append(file)
+
+        self.create_folders_list = list(self.categorized_dict.keys())
+        return self.categorized_dict
 
     def create_directories(self):
         self.check_file_types()
 
+        for folder_name in self.categorized_dict:
+            folder_path = self.path / folder_name
+
+            if not folder_path.exists():
+                folder_path.mkdir()
+                print(f"Created directory: {folder_path}")
+            else:
+                print(f"Directory already exists: {folder_path}")
+
+    def move_files_to_directories(self):
+        if not self.categorized_dict:
+            self.check_file_types()
+
+        for folder_name, files in self.categorized_dict.items():
+            destination_dir = self.path / folder_name
+
+            for file in files:
+                moved_file = file.move_into(destination_dir)
+
+                print(f"Moved {file.name} to {folder_name}")
+
     def test_print(self):
         print(self.create_folders_list)
+        print(self.categorized_dict)
+
+    # for testing
+    def remove_dir(self):
+
+        for folder in self.create_folders_list:
+            folder_path = self.path / folder
+            if folder_path.exists():
+                folder_path.rmdir()
+                print(f"removed directory: {folder_path}")
