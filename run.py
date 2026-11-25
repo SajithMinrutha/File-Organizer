@@ -1,10 +1,14 @@
+import sys
 from pathlib import Path
 
 from src import Organizer
 
 
 def main():
-    target_directory = Path.cwd()
+    if getattr(sys, "frozen", False):
+        target_directory = Path(sys.executable).resolve().parent
+    else:
+        target_directory = Path(__file__).resolve().parent
 
     organizer = Organizer(target_directory)
     organizer.scan_for_files()
