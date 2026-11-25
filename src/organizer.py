@@ -90,16 +90,3 @@ class Organizer:
                 moved_file = file.move_into(destination_dir)
 
                 print(f"Moved {file.name} to {folder_name}")
-
-    def test_print(self):
-        print(self.create_folders_list)
-        print(self.categorized_dict)
-
-    # for testing
-    def remove_dir(self):
-
-        for folder in self.create_folders_list:
-            folder_path = self.path / folder
-            if folder_path.exists():
-                folder_path.rmdir()
-                print(f"removed directory: {folder_path}")
