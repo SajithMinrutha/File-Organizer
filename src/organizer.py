@@ -1,12 +1,16 @@
 from pathlib import Path
 
+from .categories import FILE_CATEGORIES
 
+
+# handle empty extensions
 class Organizer:
     def __init__(self, path):
         self.P = Path(path)
         self.files_list = []
         self.subdirs_list = []
-        self.extensions = []
+        self.extensions_list = []
+        self.create_folders_list = []
 
     def scan_for_subdirs(self):
         print(f"\nscanning {self.P} for subdirectories...\n")
@@ -23,11 +27,10 @@ class Organizer:
         return self.files_list
 
     def identify_file_extensions(self):
-        self.extensions = []
         print(f"\nidentifying file extensions in {self.P}")
         for file in self.files_list:
-            self.extensions.append(file.suffix)
-        return self.extensions
+            self.extensions_list.append(file.suffix)
+        return self.extensions_list
 
     def total_files_counter(self):
         total_files = len(self.files_list)
@@ -35,7 +38,7 @@ class Organizer:
         return total_files
 
     def remove_duplicates(self):
-        return set(self.extensions)
+        return set(self.extensions_list)
 
     def list_files_by_type(self):
         remove_duplicates = self.remove_duplicates()
@@ -46,5 +49,16 @@ class Organizer:
             ]
         return files_by_type
 
+    def check_file_types(self):
+        for key, extensions_set in FILE_CATEGORIES.items():
+            print(key, extensions_set)
+            for ext in self.extensions_list:
+                if ext in extensions_set:
+                    self.create_folders_list.append(key)
+        return self.create_folders_list
+
     def create_directories(self):
-        pass
+        self.check_file_types()
+
+    def test_print(self):
+        print(self.create_folders_list)

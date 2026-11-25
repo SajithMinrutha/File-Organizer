@@ -12,6 +12,9 @@ def main():
     organizer.identify_file_extensions()
     organizer.total_files_counter()
     organizer.list_files_by_type()
+    organizer.create_directories()
+    organizer.check_file_types()
+    organizer.test_print()
 
 
 if __name__ == "__main__":
