@@ -1,17 +1,17 @@
 import os
 
-from app import App
+from src import Organizer
 
 
 def main():
     current_path = os.getcwd()
-    app = App(current_path)
+    organizer = Organizer(current_path)
 
-    app.scan_for_files()
-    app.scan_for_subdirs()
-    app.identify_file_extensions()
-    app.total_files_counter()
-    app.list_files_by_type()
+    organizer.scan_for_files()
+    organizer.scan_for_subdirs()
+    organizer.identify_file_extensions()
+    organizer.total_files_counter()
+    organizer.list_files_by_type()
 
 
 if __name__ == "__main__":

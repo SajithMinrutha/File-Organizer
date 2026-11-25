@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-class App:
+class Organizer:
     def __init__(self, path):
         self.P = Path(path)
         self.files_list = []
