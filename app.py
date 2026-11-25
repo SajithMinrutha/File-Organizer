@@ -17,6 +17,23 @@ class App:
         # scan for files
         print(f"\nscanning {self.P} for files...\n")
 
-        files_list = [entry for entry in self.P.iterdir() if entry.is_file()]
-        for files in files_list:
+        self.files_list = [entry for entry in self.P.iterdir() if entry.is_file()]
+        for files in self.files_list:
             print(files)
+
+    def identify_file_extensions(self):
+        # identify file extensions
+        self.extensions = []
+        print(f"\nidentifying file extensions in {self.P}")
+        for file in self.files_list:
+            self.extensions.append(file.suffix)
+
+    def total_files_counter(self):
+        total_files = len(self.extensions)
+        print(f"\nTotal Files:{total_files} \n")
+
+    def remove_duplicates(self):
+        pass
+
+    def list_files_by_type(self):
+        pass
