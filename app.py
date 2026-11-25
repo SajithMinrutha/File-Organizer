@@ -7,11 +7,16 @@ class App:
 
     def scan_for_subdirs(self):
         # scan for subdirectories
-        print(f"scanning {self.P} for subdirectories...")
+        print(f"\nscanning {self.P} for subdirectories...\n")
 
-        subdirectory_list = [entry for entry in self.P.iterdir() if entry.is_dir()]
-        for subdir in subdirectory_list:
+        subdirs_list = [entry for entry in self.P.iterdir() if entry.is_dir()]
+        for subdir in subdirs_list:
             print(subdir)
 
-    def get_path():
-        pass
+    def scan_for_files(self):
+        # scan for files
+        print(f"\nscanning {self.P} for files...\n")
+
+        files_list = [entry for entry in self.P.iterdir() if entry.is_file()]
+        for files in files_list:
+            print(files)
